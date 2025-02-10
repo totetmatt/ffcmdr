@@ -1,0 +1,10 @@
+.venv
+*.pyc
+__pycache__
+.coverage
+.py
+*.mp4
+workspace/
+.pytest_cache
+*.egg-info
+dist/
