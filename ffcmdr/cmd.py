@@ -12,6 +12,8 @@ from .filter_complex import FilterGraph
 from .filter_complex import FilterChain
 from .filter_complex import Filter
 
+from functools import partial
+
 """
 ffmpeg [global_options] {[input_file_options] -i input_url} ... {[output_file_options] output_url} ... 
 https://www.youtube.com/watch?v=0To1aYglVHE
@@ -252,3 +254,8 @@ class FFprobe(FFmpegCmd):
                 chain.from_iterable([chunk.render() for chunk in self.output_chunks])
             )
         )
+
+IArg = partial(FFmpegArg,flag=ArgFlag.IN)
+OArg = partial(FFmpegArg,flag=ArgFlag.OUT)
+IOArg = partial(FFmpegArg,flag=ArgFlag.IN | ArgFlag.OUT)
+GArg = partial(FFmpegArg,flag=ArgFlag.GLOBAL)
