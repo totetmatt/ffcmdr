@@ -255,7 +255,8 @@ class FFprobe(FFmpegCmd):
             )
         )
 
-IArg = partial(FFmpegArg,flag=ArgFlag.IN)
-OArg = partial(FFmpegArg,flag=ArgFlag.OUT)
-IOArg = partial(FFmpegArg,flag=ArgFlag.IN | ArgFlag.OUT)
-GArg = partial(FFmpegArg,flag=ArgFlag.GLOBAL)
+
+IArg = partial(FFmpegArg, flag=ArgFlag.IN)
+OArg = partial(FFmpegArg, flag=ArgFlag.OUT)
+IOArg = partial(FFmpegArg, flag=ArgFlag.IN | ArgFlag.OUT)
+GArg = partial(FFmpegArg, flag=ArgFlag.GLOBAL)

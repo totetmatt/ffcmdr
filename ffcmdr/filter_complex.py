@@ -20,6 +20,8 @@ Chainable = Union["FilterChain", "Filter", "FilterGraph"]
 """
     TODO: Do same as for cmd with pre generated filter component
 """
+
+
 class Filter:
 
     def __init__(self, name: str, *args, **kwargs):
