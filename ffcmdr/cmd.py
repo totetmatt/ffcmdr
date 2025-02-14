@@ -55,7 +55,7 @@ class FFmpegArg:
                 return chunk() + self + other
 
         if issubclass(other.__class__, FFmpegChunk):
-            if other.arg_type == self.flag:
+            if other.arg_type in self.flag:
                 return replace(other, group_option=[self] + other.group_option)
 
             raise Exception(f"{self} and {other} doesn't match argflag type ")
@@ -140,7 +140,25 @@ class FFmpegChunk:
                 (ArgFlag.GLOBAL, ArgFlag.GLOBAL): FFmpegGlobal,
             }
             if chunk := chunk_resolution.get((self.arg_type, other.arg_type)):
-                return chunk(group_option=self.group_option + other.group_option)
+                if (self.arg_type, other.arg_type) == (ArgFlag.GLOBAL, ArgFlag.GLOBAL):
+                    return chunk(group_option=self.group_option + other.group_option)
+                self_url = None
+                other_url = None
+
+                if self.arg_type != ArgFlag.IN | ArgFlag.OUT:
+                    self_url = self.url
+                if other.arg_type != ArgFlag.IN | ArgFlag.OUT:
+                    other_url = other.url
+
+                if self_url and other_url and other_url != self_url:
+                    raise Exception(
+                        "Url defined in both part should. One should be None"
+                    )
+
+                url = {}
+                if chunk != FFmpegInputOutput:
+                    url = {"url": self_url if self_url else other_url}
+                return chunk(group_option=self.group_option + other.group_option, **url)
 
         raise Exception(f"Can't add {self} + {other} ")
 

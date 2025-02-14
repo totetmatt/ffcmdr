@@ -335,8 +335,14 @@ def test_stream_selector():
     "left,right,result",
     [
         pytest.param(FFmpegInput(), FFmpegInput(), FFmpegInput()),
+        pytest.param(FFmpegInput(), FFmpegInput("test"), FFmpegInput("test")),
+        pytest.param(FFmpegInput("test"), FFmpegInput(), FFmpegInput("test")),
+        pytest.param(FFmpegInput("test"), FFmpegInput("test"), FFmpegInput("test")),
         pytest.param(FFmpegInput(), FFmpegInputOutput(), FFmpegInput()),
         pytest.param(FFmpegOutput(), FFmpegOutput(), FFmpegOutput()),
+        pytest.param(FFmpegOutput(), FFmpegOutput("test"), FFmpegOutput("test")),
+        pytest.param(FFmpegOutput("test"), FFmpegOutput(), FFmpegOutput("test")),
+        pytest.param(FFmpegOutput("test"), FFmpegOutput("test"), FFmpegOutput("test")),
         pytest.param(FFmpegOutput(), FFmpegInputOutput(), FFmpegOutput()),
         pytest.param(FFmpegInputOutput(), FFmpegInput(), FFmpegInput()),
         pytest.param(FFmpegInputOutput(), FFmpegOutput(), FFmpegOutput()),
@@ -345,7 +351,7 @@ def test_stream_selector():
     ],
 )
 def test_chunk_resolution(left, right, result):
-    assert type(result) == type(left + right)
+    assert result == left + right
 
 
 @pytest.mark.parametrize(
@@ -359,6 +365,8 @@ def test_chunk_resolution(left, right, result):
         pytest.param(FFmpegGlobal(), FFmpegOutput()),
         pytest.param(FFmpegGlobal(), FFmpegInputOutput()),
         pytest.param(FFmpegInputOutput(), FFmpegGlobal()),
+        pytest.param(FFmpegInput("test"), FFmpegInput("test2")),
+        pytest.param(FFmpegOutput("test"), FFmpegOutput("test2")),
     ],
 )
 def test_chunk_resolution_incorrect(left, right):

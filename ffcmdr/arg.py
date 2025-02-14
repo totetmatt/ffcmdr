@@ -204,3 +204,4 @@ print_format = GArg("print_format")
 
 ## Other
 movflags = OArg("movflags")
+flags = OArg("flags")
