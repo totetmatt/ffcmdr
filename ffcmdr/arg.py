@@ -112,7 +112,7 @@ filter_hw_device = GArg("filter_hw_device")
 hwaccel = IArg("hwaccel")
 hwaccel_device = IArg("hwaccel_device")
 hwaccels = GArg("hwaccels")
-fix_sub_duration_heartbeat = IO("fix_sub_duration_heartbeat")
+fix_sub_duration_heartbeat = IOArg("fix_sub_duration_heartbeat")
 
 # Audio Options https://ffmpeg.org/ffmpeg.html#Audio-Options
 aframes = OArg("aframes")
@@ -201,3 +201,6 @@ show_error = GArg("show_error")
 show_format = GArg("show_format")
 show_streams = GArg("show_streams")
 print_format = GArg("print_format")
+
+## Other
+movflags = OArg("movflags")
