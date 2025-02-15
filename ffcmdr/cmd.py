@@ -209,7 +209,7 @@ class FFmpegInputOutput(FFmpegChunk):
 
 @dataclass(frozen=True)
 class FFmpegCmd:
-
+    cmd :str = field(default="ffmpeg")
     global_chunk: FFmpegGlobal = field(default_factory=FFmpegGlobal)
     input_chunks: list[FFmpegInput] = field(default_factory=list)
     output_chunks: list[FFmpegOutput] = field(default_factory=list)
@@ -252,7 +252,7 @@ class FFmpegCmd:
 
     def render(self) -> list[str]:
         return (
-            ["ffmpeg"]
+            [self.cmd]
             + self.global_chunk.render()
             + list(chain.from_iterable([chunk.render() for chunk in self.input_chunks]))
             + list(
@@ -263,15 +263,7 @@ class FFmpegCmd:
 
 @dataclass(frozen=True)
 class FFprobe(FFmpegCmd):
-    def render(self) -> list[str]:
-        return (
-            ["ffprobe"]
-            + self.global_chunk.render()
-            + list(chain.from_iterable([chunk.render() for chunk in self.input_chunks]))
-            + list(
-                chain.from_iterable([chunk.render() for chunk in self.output_chunks])
-            )
-        )
+    cmd : str = field(default="ffprobe")
 
 
 IArg = partial(FFmpegArg, flag=ArgFlag.IN)
