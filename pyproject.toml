@@ -6,11 +6,18 @@ authors = [
     {name = "Matthieu Totet",email = "matthieu.totet@gmail.com"}
 ]
 license = {text = "CeCILL-C"}
-readme = "README.md"
+readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.10"
 dependencies = [
 ]
+license-files = ["LICEN[CS]E*"]
+keywords = ["ffmpeg","command line","media"]
 
+[project.urls]
+Homepage = "https://github.com/totetmatt/ffcmdr"
+Documentation = "https://github.com/totetmatt/ffcmdr"
+Repository = "https://github.com/totetmatt/ffcmdr.git"
+Issues = "https://github.com/totetmatt/ffcmdr/issues"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
