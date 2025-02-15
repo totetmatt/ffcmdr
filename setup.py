@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ffcmdr',  # Replace with your package’s name
-    version='0.3.0',
+    version='0.3.1',
     packages=find_packages(),
     install_requires=[
         # List your dependencies here

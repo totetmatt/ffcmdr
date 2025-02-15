@@ -29,8 +29,8 @@ def run(
     input_stream=None,
     **kwargs,
 ) -> tuple:
-    pipe_input = [i for i in cmd.input_chunks if i.url.startswith("pipe:")]
-    pipe_output = [i for i in cmd.output_chunks if i.url.startswith("pipe:")]
+    pipe_input = [i for i in cmd.input_chunks if i.url and i.url.startswith("pipe:")]
+    pipe_output = [i for i in cmd.output_chunks if i.url and i.url.startswith("pipe:")]
     # TODO: Manage multiple pipe with mkfifo or mknod
     if not stdin and pipe_input:
         stdin = PIPE
