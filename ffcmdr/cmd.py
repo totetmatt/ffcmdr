@@ -71,7 +71,7 @@ class FFmpegArg:
             key = f"{key}:{self.stream_selector}"
         value = []
         if self.value:
-            value = [self.value]
+            value = [f'{self.value}']
             if type(self.value) in [FilterGraph, FilterChain, Filter]:
                 value = [self.value.render()]
 
