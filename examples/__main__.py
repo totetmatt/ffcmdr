@@ -172,12 +172,81 @@ class Examples:
         data = json.loads(out)
         pprint(data)
 
+    def inputs_named_pipe():
+        """
+            Using 2 input stream with named pipe.
+            Not best way, might worth looking integrating this into lib
+        """
+        import subprocess
+        from ffcmdr.arg import y,  b, filter_complex, loop, pix_fmt, c, shortest,  movflags, f , map
+        from ffcmdr.cmd import FFmpegCmd
+        from ffcmdr.run import run_async
+        from ffcmdr import FFmpegOutput, FFmpegInput
+        from ffcmdr.filter_complex import Filter
+        import os
+        from threading import Thread
+        with open("image.png",'rb') as file:
+            binary_image = file.read()
 
+        with open("audio.mp3",'rb') as file:
+            binary_audio = file.read()
+
+        path_image = "input_pipe_image"
+        os.mkfifo(path_image) if not os.path.exists(path_image) else None
+
+        path_audio = "input_pipe_audio"
+        os.mkfifo(path_audio) if not os.path.exists(path_audio) else None
+
+        graph = (
+            Filter("showspectrum",s="720x320",fscale="log",slide="rscroll",color="intensity")[["0:a"]:["wf"]]
+            >> Filter("scale","-2:rh")[["wf","1:v"]:["2nd"]] 
+            >> Filter("hstack")[["1:v","2nd"]:["out"]]
+            )
+
+        cmd = (
+            FFmpegCmd()  +y + filter_complex(graph)
+            + (FFmpegInput(path_audio))
+            + (FFmpegInput(path_image)+ loop("1"))
+
+            + (
+                    FFmpegOutput("pipe:1") 
+                    + shortest 
+                    + f("mp4") 
+                    + map('[out]')
+                    + map("0:a")
+                    + c['v']("libx264")
+                    + c['a']("aac")
+                    + b['a']("192k")
+                    + pix_fmt("yuv420p")
+                    + movflags("frag_keyframe+empty_moov")
+                )
+                )
+        process=  run_async(cmd,stdout=subprocess.PIPE)
+
+        def write_to_pipe(pipe_name, binary):
+            fd_pipe = os.open(pipe_name,os.O_WRONLY )
+            os.write(fd_pipe,binary)
+            os.close(fd_pipe)
+
+        thread = Thread(target = write_to_pipe, args=(path_image,binary_image))
+        thread2 = Thread(target = write_to_pipe, args=(path_audio,binary_audio))
+        thread.start()
+        thread2.start()
+
+        out , _ = process.communicate()
+
+        with open("out_pipe.mp4",'wb') as file:
+            file.write(out)
+        for t in [thread2,thread]:
+            t.join()
+        os.unlink(path_image)
+        os.unlink(path_audio)
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="FFcmdr Examples")
-    parser.add_argument("example_name")
-    args = parser.parse_args()
     examples = {k: v for k, v in Examples.__dict__.items() if callable(v)}
+    parser = argparse.ArgumentParser()
+    parser.add_argument("example_name",choices=examples.keys())
+    args = parser.parse_args()
+
 
     example_func = examples.get(args.example_name)
     if not example_func:
