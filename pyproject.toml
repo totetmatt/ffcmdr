@@ -1,6 +1,6 @@
 [project]
 name = "ffcmdr"
-version = "0.3.2"
+version = "0.4.0"
 description = "FFmpeg Command line Helper Library"
 authors = [
     {name = "Matthieu Totet",email = "matthieu.totet@gmail.com"}
